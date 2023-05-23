@@ -1,0 +1,31 @@
+services:
+  teach_one_development_postgres:
+    container_name: teach_one_development_postgres
+    image: postgres:14.8-alpine
+    restart: on-failure
+    ports:
+      - 5001:5432
+    volumes:
+      - teach_one_development_postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=teach-one
+      - POSTGRES_PASSWORD=teach-one
+      - POSTGRES_DB=teach-one-development
+  teach_one_test_postgres:
+    container_name: teach_one_test_postgres
+    image: postgres:14.8-alpine
+    restart: on-failure
+    ports:
+      - 5002:5432
+    volumes:
+      - teach_one_test_postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=teach-one
+      - POSTGRES_PASSWORD=teach-one
+      - POSTGRES_DB=teach-one-test
+
+volumes:
+  teach_one_development_postgres:
+    driver: local
+  teach_one_test_postgres:
+    driver: local  
