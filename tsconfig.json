@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "strict": true,
     "module": "commonjs",
     "declaration": true,
@@ -18,10 +19,12 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,
+    "composite": true,
     "paths": {
       "@accounts/*": ["accounts/*"],
       "@utils/*": ["utils/*"],
-      "@lib/*": ["lib/*"]
+      "@lib/*": ["lib/*"],
+      "@mail-sender/*": ["mail-sender/*"]
     }
   }
 }
