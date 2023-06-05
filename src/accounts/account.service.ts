@@ -94,9 +94,10 @@ export class AccountService {
     const accountVerificationMailEventPayload: AccountVerificationEvent = {
       firstName,
       otp: generatedOTPCode,
+      emailAddress,
     };
 
-    // Emit email verification email event
+    // Emit email verification event
     this.eventEmitter.emit(
       ACCOUNT_VERIFICATION_MAIL_EVENT,
       accountVerificationMailEventPayload,

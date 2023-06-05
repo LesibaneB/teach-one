@@ -14,6 +14,7 @@ import {
 } from '@accounts/utils';
 import { faker } from '@faker-js/faker';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { testDatabaseConfigModule } from '@utils/test-database.config';
@@ -30,7 +31,11 @@ describe('AccountsController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [testDatabaseConfigModule(), AccountsModule],
+      imports: [
+        EventEmitterModule.forRoot(),
+        testDatabaseConfigModule(),
+        AccountsModule,
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
