@@ -1,14 +1,16 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleFileExtensions": ["js", "json", "ts", "tsx"],
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)(s|sx)$": "ts-jest"
   },
   "moduleNameMapper": {
     "^@accounts/(.*)$": "<rootDir>/../src/accounts/$1",
     "^@utils/(.*)$": "<rootDir>/../src/utils/$1",
-    "^@lib/(.*)$": "<rootDir>/../src/lib/$1"
+    "^@lib/(.*)$": "<rootDir>/../src/lib/$1",
+    "^@mail-sender/(.*)$": "<rootDir>/../src/mail-sender/$1",
+    "^@config/(.*)$": "<rootDir>/../src/config/$1"
   }
 }

@@ -38,7 +38,6 @@ export class OTP {
     const errors = await validate(this);
 
     if (errors.length > 0) {
-      console.log(`${this.otp}}`);
       console.log(`${OTP.name} validation failed with errors : ${errors}`);
       throw new Error(`${OTP.name} Entity Validation failed!`);
     }

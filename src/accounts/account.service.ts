@@ -14,6 +14,7 @@ import {
 import { Account, OTP, Password } from '@accounts/entities';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   checkOTPExpired,
   generateOTP,
@@ -21,6 +22,8 @@ import {
   otpMatches,
 } from '@accounts/utils';
 import { AccountStatus } from '@accounts/models';
+import { ACCOUNT_VERIFICATION_MAIL_EVENT } from '@mail-sender/utils';
+import { AccountVerificationEvent } from '@mail-sender/events';
 
 const SALT_ROUNDS = 10;
 
@@ -42,6 +45,7 @@ export class AccountService {
     private passwordRepository: Repository<Password>,
     @InjectRepository(OTP)
     private otpRepository: Repository<OTP>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -86,7 +90,18 @@ export class AccountService {
     // Create and return otp code
     const generatedOTPCode = await this.createOTPForAccount(account);
 
-    // TODO: send account verification mail
+    // Account verification email payload
+    const accountVerificationMailEventPayload: AccountVerificationEvent = {
+      firstName,
+      otp: generatedOTPCode,
+      emailAddress,
+    };
+
+    // Emit email verification event
+    this.eventEmitter.emit(
+      ACCOUNT_VERIFICATION_MAIL_EVENT,
+      accountVerificationMailEventPayload,
+    );
   }
 
   /**

@@ -14,6 +14,7 @@ import {
   ACCOUNT_NOT_FOUND_ERROR_MESSAGE,
   OTP_VERIFICATION_OTP_INVALID,
 } from '@accounts/utils';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 describe('AccountController', () => {
   // Test controller instance
@@ -28,6 +29,7 @@ describe('AccountController', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        EventEmitterModule.forRoot(),
         testDatabaseConfigModule(),
         TypeOrmModule.forFeature([Account, Password, OTP]),
       ],
