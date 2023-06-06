@@ -9,6 +9,7 @@ import { AccountService } from '@accounts/account.service';
 import {
   CreateAccountDto,
   ResetPasswordDTO,
+  SendAccountVerificationDTO,
   VerifyAccountDTO,
 } from '@accounts/dto';
 
@@ -43,12 +44,31 @@ export class AccountController {
     } catch (e: any) {
       throw new BadRequestException(e.message);
     }
-  } 
+  }
 
+  /**
+   * Resets an account password
+   * @param payload
+   */
   @Put('/reset-password')
   public async resetPassword(@Body() payload: ResetPasswordDTO): Promise<void> {
     try {
       await this.accountService.resetPassword(payload);
+    } catch (e: any) {
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  /**
+   * Sends an account verification email
+   * @param payload
+   */
+  @Post('/send-verification')
+  public async sendAccountVerification(
+    @Body() payload: SendAccountVerificationDTO,
+  ): Promise<void> {
+    try {
+      await this.accountService.sendAccountVerification(payload);
     } catch (e: any) {
       throw new BadRequestException(e.message);
     }

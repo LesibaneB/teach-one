@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import {
   CreateAccountDto,
   ResetPasswordDTO,
+  SendAccountVerificationDTO,
   VerifyAccountDTO,
 } from '@accounts/dto';
 import {
@@ -87,21 +88,7 @@ export class AccountService {
     // Create a password
     await this.createPasswordForAccount(password, account);
 
-    // Create and return otp code
-    const generatedOTPCode = await this.createOTPForAccount(account);
-
-    // Account verification email payload
-    const accountVerificationMailEventPayload: AccountVerificationEvent = {
-      firstName,
-      otp: generatedOTPCode,
-      emailAddress,
-    };
-
-    // Emit email verification event
-    this.eventEmitter.emit(
-      ACCOUNT_VERIFICATION_MAIL_EVENT,
-      accountVerificationMailEventPayload,
-    );
+    await this.sendVerification(account);
   }
 
   /**
@@ -209,8 +196,8 @@ export class AccountService {
   /**
    * Finds an account using the email address
    * @param emailAddress
-   * @returns An Account that matches the email address
-   * @throws Throws a not found error if not found
+   * @returns Account
+   * @throws Throws a not found error
    */
   public async findAccount(emailAddress: string): Promise<Account> {
     const account = await this.accountRepository.findOneBy({ emailAddress });
@@ -220,6 +207,44 @@ export class AccountService {
     }
 
     return account;
+  }
+
+  /**
+   * Sends a verification email for an account
+   * @param payload
+   */
+  public async sendAccountVerification(
+    payload: SendAccountVerificationDTO,
+  ): Promise<void> {
+    const { emailAddress } = payload;
+
+    // Find the account. Throw error if not found
+    const account = await this.findAccount(emailAddress);
+
+    // Create otp and send verification email
+    await this.sendVerification(account);
+  }
+
+  /**
+   * Creates an OTP and sends a verification email
+   * @param account
+   */
+  private async sendVerification(account: Account): Promise<void> {
+    // Create and return otp code
+    const generatedOTPCode = await this.createOTPForAccount(account);
+
+    // Account verification email payload
+    const accountVerificationMailEventPayload: AccountVerificationEvent = {
+      firstName: account.firstName,
+      otp: generatedOTPCode,
+      emailAddress: account.emailAddress,
+    };
+
+    // Emit email verification event
+    this.eventEmitter.emit(
+      ACCOUNT_VERIFICATION_MAIL_EVENT,
+      accountVerificationMailEventPayload,
+    );
   }
 
   /**

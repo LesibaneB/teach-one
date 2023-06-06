@@ -3,6 +3,7 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import {
@@ -14,6 +15,7 @@ import {
   validate,
 } from 'class-validator';
 import { AccountStatus, AccountTypes } from '@accounts/models';
+import { OTP } from './otp.entity';
 
 @Entity()
 export class Account {
@@ -55,6 +57,9 @@ export class Account {
   @IsOptional()
   @IsDate()
   updatedDate: Date;
+
+  @OneToMany(() => OTP, (otp) => otp.account)
+  otps: Array<OTP>;
 
   @BeforeInsert()
   @BeforeUpdate()

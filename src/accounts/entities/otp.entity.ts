@@ -4,8 +4,7 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Account } from './account.entity';
@@ -28,8 +27,7 @@ export class OTP {
   @Column({ default: true })
   isValid: boolean;
 
-  @OneToOne(() => Account)
-  @JoinColumn()
+  @ManyToOne(() => Account, (account) => account.otps)
   account: Account;
 
   @BeforeInsert()

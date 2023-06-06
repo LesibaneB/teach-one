@@ -2,6 +2,7 @@ import { AccountsModule } from '@accounts/accounts.module';
 import {
   CreateAccountDto,
   ResetPasswordDTO,
+  SendAccountVerificationDTO,
   VerifyAccountDTO,
 } from '@accounts/dto';
 import { OTP } from '@accounts/entities';
@@ -220,7 +221,7 @@ describe('AccountsController (e2e)', () => {
     });
   });
 
-  describe('Account passoword reset.', () => {
+  describe('Password reset.', () => {
     it('(PUT) /reset-password should succesfully reset password for an account when trying to reset password with a correct payload.', async () => {
       const password = faker.internet.password();
       const emailAddress = faker.internet.email();
@@ -279,6 +280,68 @@ describe('AccountsController (e2e)', () => {
           return request(app.getHttpServer())
             .put('/account/reset-password')
             .send(resetPassword)
+            .expect(400, {
+              statusCode: 400,
+              message: ACCOUNT_NOT_FOUND_ERROR_MESSAGE,
+              error: 'Bad Request',
+            });
+        });
+    });
+  });
+
+  describe('Send verification.', () => {
+    it('(POST) /send-verification should succesfully send account verification when a correct email is used.', async () => {
+      const password = faker.internet.password();
+      const emailAddress = faker.internet.email();
+      const createAccountPayload: CreateAccountDto = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        emailAddress,
+        userType: AccountTypes.INSTRUCTOR,
+        password,
+        confirmPassword: password,
+      };
+
+      return request(app.getHttpServer())
+        .post('/account')
+        .send(createAccountPayload)
+        .expect(201)
+        .then(async () => {
+          const sendAccountVerificationRequest: SendAccountVerificationDTO = {
+            emailAddress: createAccountPayload.emailAddress,
+          };
+
+          return request(app.getHttpServer())
+            .post('/account/send-verification')
+            .send(sendAccountVerificationRequest)
+            .expect(201);
+        });
+    });
+
+    it('(POST) /send-verification should fail to send account verification when an icorrect email is used.', async () => {
+      const password = faker.internet.password();
+      const emailAddress = faker.internet.email();
+      const createAccountPayload: CreateAccountDto = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        emailAddress,
+        userType: AccountTypes.INSTRUCTOR,
+        password,
+        confirmPassword: password,
+      };
+
+      return request(app.getHttpServer())
+        .post('/account')
+        .send(createAccountPayload)
+        .expect(201)
+        .then(async () => {
+          const sendAccountVerificationRequest: SendAccountVerificationDTO = {
+            emailAddress: faker.internet.email(), // Use wrong email
+          };
+
+          return request(app.getHttpServer())
+            .post('/account/send-verification')
+            .send(sendAccountVerificationRequest)
             .expect(400, {
               statusCode: 400,
               message: ACCOUNT_NOT_FOUND_ERROR_MESSAGE,

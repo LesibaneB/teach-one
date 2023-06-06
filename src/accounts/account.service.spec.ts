@@ -189,8 +189,6 @@ describe('AccountService', () => {
       expect(account.emailAddress).toEqual(createAccountParams.emailAddress);
       expect(account.verified).toEqual(false);
 
-      // TODO: Check if email was sent with correct payload
-
       // Check if otp was saved for account
       const otp = await otpRepository.findOne({
         relations: {
@@ -215,7 +213,7 @@ describe('AccountService', () => {
     });
   });
 
-  describe('Account password reset.', () => {
+  describe('Password reset.', () => {
     it('should successfully reset password when resetPassword() is called with the correct email address.', async () => {
       const password = faker.internet.password();
       const emailAddress = faker.internet.email();
@@ -307,6 +305,75 @@ describe('AccountService', () => {
 
       try {
         await service.resetPassword(resetPasswordPayload);
+      } catch (error: any) {
+        expect(error).toBeDefined();
+        expect(error.message).toBe(ACCOUNT_NOT_FOUND_ERROR_MESSAGE);
+      }
+    });
+  });
+
+  describe('Send verification.', () => {
+    it('should successfully send account verification when sendVerification() is called with the correct email.', async () => {
+      const password = faker.internet.password();
+      const emailAddress = faker.internet.email();
+      const createAccountParams: CreateAccountDto = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        emailAddress,
+        userType: AccountTypes.INSTRUCTOR,
+        password,
+        confirmPassword: password,
+      };
+
+      await service.createAccount(createAccountParams);
+
+      // Check if the account exists in the DB
+      let account = await service.findAccount(emailAddress);
+      expect(account).not.toBeNull();
+
+      await service.sendAccountVerification({
+        emailAddress: account.emailAddress,
+      });
+
+      // Check if otp was saved for account
+      const otps = await otpRepository.find({
+        relations: {
+          account: true,
+        },
+        where: {
+          account: {
+            emailAddress: account.emailAddress,
+          },
+        },
+      });
+      expect(otps).not.toBeNull();
+
+      // Check second otp has been saved
+      expect(otps.length).toBe(2);
+    });
+
+    it('should fail to send account verification when sendVerification() is called with the incorrect email.', async () => {
+      const password = faker.internet.password();
+      const emailAddress = faker.internet.email();
+      const createAccountParams: CreateAccountDto = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        emailAddress,
+        userType: AccountTypes.INSTRUCTOR,
+        password,
+        confirmPassword: password,
+      };
+
+      await service.createAccount(createAccountParams);
+
+      // Check if the account exists in the DB
+      let account = await service.findAccount(emailAddress);
+      expect(account).not.toBeNull();
+
+      try {
+        await service.sendAccountVerification({
+          emailAddress: faker.internet.email(),
+        });
       } catch (error: any) {
         expect(error).toBeDefined();
         expect(error.message).toBe(ACCOUNT_NOT_FOUND_ERROR_MESSAGE);

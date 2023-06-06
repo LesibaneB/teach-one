@@ -252,4 +252,65 @@ describe('AccountController', () => {
       }
     });
   });
+
+  describe('Send verification.', () => {
+    it('should successfully send account verification when sendVerification() is called with the correct email.', async () => {
+      const password = faker.internet.password();
+      const emailAddress = faker.internet.email();
+      const createAccountParams: CreateAccountDto = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        emailAddress,
+        userType: AccountTypes.INSTRUCTOR,
+        password,
+        confirmPassword: password,
+      };
+
+      await controller.createAccount(createAccountParams);
+
+      await controller.sendAccountVerification({
+        emailAddress,
+      });
+
+      // Check if otp was saved for account
+      const otps = await otpRepository.find({
+        relations: {
+          account: true,
+        },
+        where: {
+          account: {
+            emailAddress,
+          },
+        },
+      });
+      expect(otps).not.toBeNull();
+
+      // Check second otp has been saved
+      expect(otps.length).toBe(2);
+    });
+
+    it('should fail to send account verification when sendVerification() is called with the incorrect email.', async () => {
+      const password = faker.internet.password();
+      const emailAddress = faker.internet.email();
+      const createAccountParams: CreateAccountDto = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        emailAddress,
+        userType: AccountTypes.INSTRUCTOR,
+        password,
+        confirmPassword: password,
+      };
+
+      await controller.createAccount(createAccountParams);
+
+      try {
+        await controller.sendAccountVerification({
+          emailAddress: faker.internet.email(),
+        });
+      } catch (error: any) {
+        expect(error).toBeDefined();
+        expect(error.message).toBe(ACCOUNT_NOT_FOUND_ERROR_MESSAGE);
+      }
+    });
+  });
 });
