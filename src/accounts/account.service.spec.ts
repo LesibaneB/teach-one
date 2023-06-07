@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AccountService } from '@accounts/account.service';
 import { Account, OTP, Password } from '@accounts/entities';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import { testDatabaseConfigModule } from '@utils/test-database.config';
+import { testDatabaseConfigModule } from '@utils/test-database-module.config';
 import { DataSource, Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { CreateAccountDto, ResetPasswordDTO } from '@accounts/dto';

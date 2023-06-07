@@ -226,6 +226,35 @@ export class AccountService {
   }
 
   /**
+   * Checks if password matches that of an account
+   * @param accountId
+   * @param password
+   * @returns Promise<boolean>
+   */
+  public async passwordMatches(
+    emailAddress: string,
+    password: string,
+  ): Promise<boolean> {
+    const savedPassword = await this.passwordRepository.findOne({
+      relations: { account: true },
+      where: {
+        account: {
+          emailAddress,
+        },
+      },
+    });
+
+    if (!savedPassword) {
+      this.logger.error(
+        `Password for account with email ${emailAddress} not found.`,
+      );
+      return false;
+    }
+
+    return bcrypt.compare(password, savedPassword.passwordHash);
+  }
+
+  /**
    * Creates an OTP and sends a verification email
    * @param account
    */

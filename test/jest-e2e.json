@@ -11,6 +11,7 @@
     "^@utils/(.*)$": "<rootDir>/../src/utils/$1",
     "^@lib/(.*)$": "<rootDir>/../src/lib/$1",
     "^@mail-sender/(.*)$": "<rootDir>/../src/mail-sender/$1",
-    "^@config/(.*)$": "<rootDir>/../src/config/$1"
+    "^@config/(.*)$": "<rootDir>/../src/config/$1",
+    "^@auth/(.*)$": "<rootDir>/../src/auth/$1"
   }
 }

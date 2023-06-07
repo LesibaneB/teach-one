@@ -13,7 +13,6 @@ export const ACCOUNT_EXISTS_ERROR_MESSAGE =
   'An account with this email address already exists.';
 export const ACCOUNT_NOT_FOUND_ERROR_MESSAGE =
   'An account with this email address does not exist.';
-export const LOGIN_UNAUTHORIZED_MESSAGE = 'Email address or password invalid.';
 export const ACCOUNT_NOT_VERIFIED_ERROR_MESSAGE =
   'The account has not been verified.';
 export const ACCOUNT_ALREADY_VERIFIED_ERROR_MESSAGE =

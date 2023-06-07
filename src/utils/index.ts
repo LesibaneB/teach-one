@@ -1,1 +1,1 @@
-export * from './test-database.config';
+export * from './test-database-module.config';

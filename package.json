@@ -25,15 +25,22 @@
     "@nestjs/config": "^2.3.2",
     "@nestjs/core": "^9.0.0",
     "@nestjs/event-emitter": "^1.4.1",
+    "@nestjs/jwt": "^10.0.3",
+    "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/typeorm": "^9.0.1",
     "@react-email/components": "^0.0.6",
     "@react-email/render": "^0.0.7",
     "@sendgrid/mail": "^7.7.0",
+    "@types/passport-jwt": "^3.0.8",
+    "@types/passport-local": "^1.0.35",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "module-alias": "^2.2.2",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
     "pg": "^8.9.0",
     "pg-mem": "^2.6.4",
     "reflect-metadata": "^0.1.13",
@@ -86,7 +93,8 @@
       "^@utils/(.*)$": "<rootDir>/utils/$1",
       "^@lib/(.*)$": "<rootDir>/lib/$1",
       "^@mail-sender/(.*)$": "<rootDir>/mail-sender/$1",
-      "^@config/(.*)$": "<rootDir>/config/$1"
+      "^@config/(.*)$": "<rootDir>/config/$1",
+      "^@auth/(.*)$": "<rootDir>/auth/$1"
     }
   }
 }
