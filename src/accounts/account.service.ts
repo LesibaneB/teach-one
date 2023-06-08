@@ -98,8 +98,13 @@ export class AccountService {
   public async verifyAccount(payload: VerifyAccountDTO): Promise<Account> {
     const { emailAddress, otp } = payload;
 
-    // Find the account. Throw error if not found
+    // Find the account.
     const account = await this.findAccount(emailAddress);
+
+    if (!account) {
+      this.logger.error(`Account for email ${emailAddress} not found.`);
+      throw new Error(ACCOUNT_NOT_FOUND_ERROR_MESSAGE);
+    }
 
     const otpVerification = await this.otpRepository.findOne({
       relations: {
@@ -156,8 +161,13 @@ export class AccountService {
   public async resetPassword(payload: ResetPasswordDTO): Promise<void> {
     const { emailAddress, password } = payload;
 
-    // Find the account. Throw error if not found
-    await this.findAccount(emailAddress);
+    // Find the account
+    const account = await this.findAccount(emailAddress);
+
+    if (!account) {
+      this.logger.error(`Account for email ${emailAddress} not found.`);
+      throw new Error(ACCOUNT_NOT_FOUND_ERROR_MESSAGE);
+    }
 
     // Create new hash
     const newPasswordHash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -197,16 +207,9 @@ export class AccountService {
    * Finds an account using the email address
    * @param emailAddress
    * @returns Account
-   * @throws Throws a not found error
    */
   public async findAccount(emailAddress: string): Promise<Account> {
-    const account = await this.accountRepository.findOneBy({ emailAddress });
-    if (!account) {
-      this.logger.error(`Account for email ${emailAddress} not found.`);
-      throw new Error(ACCOUNT_NOT_FOUND_ERROR_MESSAGE);
-    }
-
-    return account;
+    return this.accountRepository.findOneBy({ emailAddress });
   }
 
   /**
@@ -218,8 +221,13 @@ export class AccountService {
   ): Promise<void> {
     const { emailAddress } = payload;
 
-    // Find the account. Throw error if not found
+    // Find the account.
     const account = await this.findAccount(emailAddress);
+
+    if (!account) {
+      this.logger.error(`Account for email ${emailAddress} not found.`);
+      throw new Error(ACCOUNT_NOT_FOUND_ERROR_MESSAGE);
+    }
 
     // Create otp and send verification email
     await this.sendVerification(account);

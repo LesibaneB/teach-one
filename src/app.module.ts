@@ -8,7 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailSenderModule } from '@mail-sender/mail-sender.module';
 import { configuration } from '@config/configuration';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -31,15 +30,6 @@ import { JwtModule } from '@nestjs/jwt';
         database: configService.get('DATABASE_NAME'),
         entities: [__dirname + '/**/**/*.entity{.ts,.js}'],
         synchronize: true, // Turn of before going to production
-      }),
-    }),
-    JwtModule.registerAsync({
-      global: true,
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRY') },
       }),
     }),
     EventEmitterModule.forRoot(),

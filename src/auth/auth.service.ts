@@ -23,7 +23,7 @@ export class AuthService {
   ) {}
 
   /**
-   * Generates a JWT token for the account
+   * Generates a JWT token for an account
    * @param account
    * @returns JwtTokenDto
    */

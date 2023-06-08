@@ -9,7 +9,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/sign-in')
-  public async login(@Request() req): Promise<JwtTokenDto> {
+  public async signIn(@Request() req): Promise<JwtTokenDto> {
     return this.authService.signIn(req.user);
   }
 }

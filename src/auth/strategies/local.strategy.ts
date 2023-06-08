@@ -17,12 +17,12 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       password,
     );
 
-    if (!account.verified) {
-      throw new UnauthorizedException(ACCOUNT_NOT_VERIFIED_ERROR_MESSAGE);
-    }
-
     if (!account) {
       throw new UnauthorizedException(LOGIN_UNAUTHORIZED_MESSAGE);
+    }
+
+    if (!account.verified) {
+      throw new UnauthorizedException(ACCOUNT_NOT_VERIFIED_ERROR_MESSAGE);
     }
 
     return account;

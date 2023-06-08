@@ -55,6 +55,7 @@ describe('AccountsController (e2e)', () => {
   afterAll(async () => {
     await datasource.dropDatabase();
     await datasource.destroy();
+    await app.close();
   });
 
   describe('Account creation.', () => {

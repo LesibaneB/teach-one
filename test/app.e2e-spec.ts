@@ -24,7 +24,9 @@ describe('AppController (e2e)', () => {
 
   // Destroy database connection after each test
   afterEach(async () => {
+    await datasource.dropDatabase();
     await datasource.destroy();
+    await app.close();
   });
 
   it('/ (GET)', () => {
