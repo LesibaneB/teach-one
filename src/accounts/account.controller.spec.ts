@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AccountController } from '@accounts/account.controller';
-import { testDatabaseConfigModule } from '@utils/test-database.config';
+import { testDatabaseConfigModule } from '@utils/test-database-module.config';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Account, OTP, Password } from '@accounts/entities';
 import { AccountService } from '@accounts/account.service';

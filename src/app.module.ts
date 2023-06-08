@@ -7,6 +7,7 @@ import { AccountsModule } from '@accounts/accounts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailSenderModule } from '@mail-sender/mail-sender.module';
 import { configuration } from '@config/configuration';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { configuration } from '@config/configuration';
     EventEmitterModule.forRoot(),
     AccountsModule,
     MailSenderModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

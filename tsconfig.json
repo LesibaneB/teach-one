@@ -25,7 +25,8 @@
       "@utils/*": ["utils/*"],
       "@lib/*": ["lib/*"],
       "@mail-sender/*": ["mail-sender/*"],
-      "@config/*": ["config/*"]
+      "@config/*": ["config/*"],
+      "@auth/*": ["auth/*"]
     }
   }
 }

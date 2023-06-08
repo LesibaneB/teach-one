@@ -18,7 +18,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { testDatabaseConfigModule } from '@utils/test-database.config';
+import { testDatabaseConfigModule } from '@utils/test-database-module.config';
 import * as request from 'supertest';
 import { DataSource, Repository } from 'typeorm';
 
@@ -55,6 +55,7 @@ describe('AccountsController (e2e)', () => {
   afterAll(async () => {
     await datasource.dropDatabase();
     await datasource.destroy();
+    await app.close();
   });
 
   describe('Account creation.', () => {
